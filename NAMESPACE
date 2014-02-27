@@ -1,0 +1,11 @@
+exportPattern("^[[:alpha:]]+")    
+
+ importFrom(RColorBrewer, brewer.pal)
+ importFrom(Hmisc, capitalize)
+ importFrom(reshape2, dcast)
+ importFrom(classInt, classIntervals, findColours)
+ importFrom(sp, spplot)
+ importFrom(quantreg, rq)
+ importFrom(colorspace, sequential_hcl)
+ import(survey, lattice, maptools)
+ 

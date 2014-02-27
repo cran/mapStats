@@ -1,0 +1,7 @@
+calcQuantiles	        Compute survey variable quantiles
+calcStats	        Compute survey variable mean or total	
+jiggleClass	        Adjust class boundaries to protect from rounding errors
+mapStats	        Calculate and plot survey variable statistics
+plotStats	        Plot survey variable statistics
+print.plotStats         Print method for plotStats object
+usMap	                Shapefile of US state boundaries
