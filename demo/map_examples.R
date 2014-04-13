@@ -47,7 +47,7 @@ head(surveydata)
 
 mapStats(d=surveydata, var="income", by.var="year",
          wt.var="obs_weight", map.file=usMap,
-         x.geo.var="state", map.geo.var="STATE_ABBR",
+         d.geo.var="state", map.geo.var="STATE_ABBR",
          stat=c("mean","quantile"), quantiles=c(.4, .5, .6),
          palette="Reds", ngroups=6, var.pretty="household income",
          geo.pretty="state", by.pretty="Year", map.label=TRUE)
@@ -61,7 +61,7 @@ mapStats(d=surveydata, var="income", by.var="year",
 
 mapStats(d=surveydata, var="income", by.var="year",
          wt.var="obs_weight", map.file=usMap,
-         x.geo.var="state", map.geo.var="STATE_ABBR",
+         d.geo.var="state", map.geo.var="STATE_ABBR",
          stat=c("mean","quantile"), quantiles=c(.4, .5, .6),
          palette="Reds", ngroups=6, var.pretty="household income",
          geo.pretty="state", by.pretty="Year", map.label=FALSE,
@@ -72,7 +72,7 @@ mapStats(d=surveydata, var="income", by.var="year",
 
 mapStats(d=surveydata, var="income", 
          wt.var="obs_weight", map.file=usMap,
-         x.geo.var="state", map.geo.var="STATE_ABBR",
+         d.geo.var="state", map.geo.var="STATE_ABBR",
          stat=c("mean","quantile"), quantiles=c(.4, .5, .6),
          palette="Reds", ngroups=6, var.pretty="household income",
          geo.pretty="state", by.pretty="Year", map.label=TRUE,
@@ -84,7 +84,7 @@ mapStats(d=surveydata, var="income",
 
 mapStats(d=surveydata, var="income", 
          wt.var="obs_weight", map.file=usMap,
-         x.geo.var="state", map.geo.var="STATE_ABBR",
+         d.geo.var="state", map.geo.var="STATE_ABBR",
          stat=c("mean","quantile"), quantiles=c(.4, .5, .6),
          palette=c("Reds","Greens","Blues","Greys"), ngroups=6, 
          var.pretty="household income", geo.pretty="state", 
@@ -97,7 +97,7 @@ mapStats(d=surveydata, var="income",
 
 mapStats(d=surveydata, var="income", 
          wt.var="obs_weight", map.file=usMap,
-         x.geo.var="state", map.geo.var="STATE_ABBR",
+         d.geo.var="state", map.geo.var="STATE_ABBR",
          stat=c("mean","quantile"), quantiles=c(.4, .5, .6),
          palette="Reds", ngroups=6, var.pretty="household income",
          geo.pretty="state", by.pretty="Year", map.label=TRUE,
@@ -109,7 +109,7 @@ mapStats(d=surveydata, var="income",
 
 mapStats(d=surveydata, var="income", 
          wt.var="obs_weight", map.file=usMap,
-         x.geo.var="state", map.geo.var="STATE_ABBR",
+         d.geo.var="state", map.geo.var="STATE_ABBR",
          stat=c("mean","quantile"), quantiles=c(.4, .5, .6),
          palette="Reds", ngroups=6, var.pretty="household income",
          geo.pretty="state", by.pretty="Year", map.label=TRUE,
@@ -128,7 +128,7 @@ blue_hcl <- rev(colorspace::sequential_hcl(n=3, h=240))
 
 mapStats(d=surveydata, var="income", 
          wt.var="obs_weight", map.file=usMap,
-         x.geo.var="state", map.geo.var="STATE_ABBR",
+         d.geo.var="state", map.geo.var="STATE_ABBR",
          stat=c("mean","quantile"), quantiles=c(.4, .5, .6),
          col=list(red_hcl, green_hcl, blue_hcl),  
          var.pretty="household income", geo.pretty="state", 
@@ -152,7 +152,7 @@ ybox <- new_bounds[2,]
 
 mapStats(d=surveydata, var="income", by.var="year",
          wt.var="obs_weight", map.file=usMap,
-         x.geo.var="state", map.geo.var="STATE_ABBR",
+         d.geo.var="state", map.geo.var="STATE_ABBR",
          stat=c("mean"), palette="Reds", ngroups=6, 
          var.pretty="household income", geo.pretty="state", 
          by.pretty="Year", map.label=TRUE, xlim=xbox, ylim=ybox)
@@ -166,7 +166,7 @@ mapStats(d=surveydata, var="income", by.var="year",
 
 mapStats(d=surveydata, var="income_ge30k", 
          wt.var="obs_weight", map.file=usMap,
-         x.geo.var="state", map.geo.var="STATE_ABBR",
+         d.geo.var="state", map.geo.var="STATE_ABBR",
          stat=c("mean"), col.pal="Reds", 
          titles="Percent of respondents with income\nat least $30,000")
 
@@ -191,7 +191,7 @@ map_overlay <- list(shaded_green, red_triangle)
 
 mapStats(d=surveydata, var="income_ge30k", 
          wt.var="obs_weight", map.file=usMap,
-         x.geo.var="state", map.geo.var="STATE_ABBR",
+         d.geo.var="state", map.geo.var="STATE_ABBR",
          stat=c("mean"), palette="Reds", 
          titles="Percent of respondents with income at least $30,000",
          sp_layout.pars=map_overlay)
@@ -221,7 +221,7 @@ usMap$region[ usMap$STATE_ABBR %in% south ] <- "South"
 #both statistics (separate = FALSE), and stack vertically
 
 mapStats(d=surveydata, var="income", wt.var="obs_weight", map.file=usMap,
-         x.geo.var="region", map.geo.var="region",
+         d.geo.var="region", map.geo.var="region",
          stat=c("mean", "quantile"), quantiles=c(.5),
          palette="Reds", ngroups=4, var.pretty="household income",
          geo.pretty="region", map.label=TRUE, cex.label=.6, separate=FALSE,

@@ -21,7 +21,8 @@ Examples are provided using the \code{\link{usMap}} shapefile with a synthetic d
 #display first five rows of shapefile dataset
 #plot the shapefile boundaries
 
-\dontrun{usMap <- readShapePoly(system.file("shapes/usMap.shp", package="mapStats")[1])
+\dontrun{
+usMap <- readShapePoly(system.file("shapes/usMap.shp", package="mapStats")[1])
 head(usMap@data)
 plot(usMap)
 }

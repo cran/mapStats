@@ -1,5 +1,5 @@
 calcQuantiles <- function(d, var, quantiles=c(0.50, .75),
-                          x.geo.var, by.var=NULL, wt.var=NULL, cell.min=2) {                          
+                          d.geo.var, by.var=NULL, wt.var=NULL, cell.min=2) {                          
 
     
 
@@ -12,13 +12,13 @@ calcQuantiles <- function(d, var, quantiles=c(0.50, .75),
     #if have two levels, need to create new vector because problems with rq and survey
  
     #need to eliminate NA values for geography
-    d <- d[ ! is.na(d[, x.geo.var ]), ]
+    d <- d[ ! is.na(d[, d.geo.var ]), ]
     
     if (! is.null(by.var)) {   
        d <- d[ ! is.na(d[, by.var ]), ]   
-       d$level.combs <- paste(d[, x.geo.var], d[, by.var], sep="~!~")   
+       d$level.combs <- paste(d[, d.geo.var], d[, by.var], sep="~!~")   
          }
-    else  {   d$level.combs <- d[, x.geo.var]   }
+    else  {   d$level.combs <- d[, d.geo.var]   }
  
     #weight vector
 
@@ -69,7 +69,7 @@ calcQuantiles <- function(d, var, quantiles=c(0.50, .75),
     levelnames <- strsplit(levelnames, split="~!~")
    
     #extract first
-    stat.mat[, x.geo.var ] <- sapply(levelnames, function(y) y[1])
+    stat.mat[, d.geo.var ] <- sapply(levelnames, function(y) y[1])
          
     if (! is.null(by.var)) {
        stat.mat[, by.var ] <- factor(sapply(levelnames, function(y) y[2]))
@@ -86,11 +86,11 @@ calcQuantiles <- function(d, var, quantiles=c(0.50, .75),
     for (k in qnames) {
 
        if (is.null( by.var )) {
-          q.stats[[ k ]] <- stat.mat[, c(x.geo.var, k) ]
+          q.stats[[ k ]] <- stat.mat[, c(d.geo.var, k) ]
        }
 
        else {
-         cast.form <- as.formula(paste(x.geo.var, by.var, sep="~")) 
+         cast.form <- as.formula(paste(d.geo.var, by.var, sep="~")) 
          q.mat <- reshape2::dcast(data=stat.mat, formula=cast.form, value.var=k)
  
          byvar.range <- names(table(stat.mat[, by.var ]))

@@ -4,12 +4,13 @@ mapStats <- function(d,
                      quantiles=c(.5, .75), 
                      wt.var=NULL,
                      wt.label=TRUE,
-                     x.geo.var,
+                     d.geo.var,
                      by.var=NULL, 
  		     map.file, 
-                     map.geo.var = x.geo.var,
+                     map.geo.var = d.geo.var,
 		     makeplot=TRUE,
-                     ngroups=4,                    
+                     ngroups=4,
+                     separate=TRUE,                    
                      cell.min=0, 
                      palette="Reds",
                      col=NULL,  
@@ -20,12 +21,11 @@ mapStats <- function(d,
                      titles=NULL,
                      cex.title=1,
                      var.pretty=var,
-                     geo.pretty=x.geo.var,
+                     geo.pretty=d.geo.var,
                      by.pretty=by.var,
                      as.table=TRUE,
                      sp_layout.pars=list(),
                      between=list(y=1),
-                     separate=TRUE,
                      horizontal.fill=TRUE,
                      num.row=1,
                      num.col=1, 
@@ -36,7 +36,7 @@ mapStats <- function(d,
   #make a dummy weights vector if no weights.
   if (is.null(wt.var)) { weight.vector <-  1 }
   else { weight.vector  <- d[, wt.var ] }
-  d<-cbind(d, weight.vector)   
+  d <- cbind(d, weight.vector)   
 
 
   summary.stats<-list()
@@ -49,7 +49,7 @@ mapStats <- function(d,
  
         summary.stats <- append(summary.stats, 
                                  calcStats(d=d, var=var, stat=k, 
-                                           x.geo.var=x.geo.var, by.var=by.var, 
+                                           d.geo.var=d.geo.var, by.var=by.var, 
                                            wt.var="weight.vector", cell.min=cell.min))                     
            }
 
@@ -60,7 +60,7 @@ mapStats <- function(d,
         summary.stats <- append(summary.stats,
                                 calcQuantiles(d=d, var=var, 
                                               quantiles=unique(quantiles),        
-                                              x.geo.var=x.geo.var, by.var=by.var,
+                                              d.geo.var=d.geo.var, by.var=by.var,
                                               wt.var="weight.vector", cell.min=cell.min)) 
                             
            }
@@ -72,9 +72,10 @@ mapStats <- function(d,
 
    list_of_plots <- plotStats(statmats=summary.stats,
                               map.file=map.file,
-                              x.geo.var=x.geo.var,
+                              d.geo.var=d.geo.var,
                               map.geo.var=map.geo.var, 
                               ngroups=ngroups,
+                              separate=separate,
                               palette=palette,
 			      col=col,
                               map.label=map.label,
@@ -91,7 +92,6 @@ mapStats <- function(d,
                               as.table=as.table,
                               sp_layout.pars=sp_layout.pars,
                               between=between,
-                              separate=separate,
                               num.col=num.col,
                               ...)
 

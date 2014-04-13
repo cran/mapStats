@@ -15,7 +15,7 @@ jiggleClass <- function(x) {
    s <- sort(x$var)
 
    #gives you the number of items in each class
-   w <- cumsum(as.vector(print(x)))
+   w <- cumsum(as.vector(table(classInt::findCols(x))))
    w <- w[ -length(w) ]
    d <- 0.001*(s[ w+1 ] - s[w])
        

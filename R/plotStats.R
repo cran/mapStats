@@ -1,8 +1,9 @@
 plotStats <- function(statmats,
-                      x.geo.var,
+                      d.geo.var,
                       map.file,
                       map.geo.var,
                       ngroups,
+                      separate,
                       palette,
                       col,
                       map.label,
@@ -17,7 +18,6 @@ plotStats <- function(statmats,
                       geo.pretty,
                       by.pretty,
                       sp_layout.pars,
-                      separate, 
                       num.col,
                       ...) {
 
@@ -107,7 +107,7 @@ plotStats <- function(statmats,
 
        #merge each time
        map_tmp@data <- merge(x=map_tmp, y=statmats[[ k ]], 
-                             by.x=map.geo.var, by.y=x.geo.var,
+                             by.x=map.geo.var, by.y=d.geo.var,
                              all.x=TRUE, sort=FALSE)
        map_tmp@data <- map_tmp@data[ order(map_tmp@data$sort.id), ]
  
@@ -183,7 +183,7 @@ plotStats <- function(statmats,
     	}
      
 
-        list_of_plots[[ paste(x.geo.var, names(statmats)[k], sep="_") ]] <- tmp_plot
+        list_of_plots[[ paste(d.geo.var, names(statmats)[k], sep="_") ]] <- tmp_plot
        
 
      

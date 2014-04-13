@@ -1,5 +1,5 @@
 calcStats <-function(d, var, stat=c("mean", "total"),
-                     x.geo.var, by.var=NULL, wt.var=NULL, cell.min=0) {
+                     d.geo.var, by.var=NULL, wt.var=NULL, cell.min=0) {
     
     
     #list to contain the stat matrices
@@ -11,7 +11,7 @@ calcStats <-function(d, var, stat=c("mean", "total"),
      }
 
     #preserve missing combinations	
-    d[, x.geo.var ] <- as.factor( d[, x.geo.var ] ) 
+    d[, d.geo.var ] <- as.factor( d[, d.geo.var ] ) 
     if (! is.null(by.var)) {  d[, by.var ] <- as.factor( d[, by.var ] )  }
 
     #formula for the weight variable
@@ -26,10 +26,10 @@ calcStats <-function(d, var, stat=c("mean", "total"),
     #even if have na.rm, need to account for cases where weight variable is missing
     #or if class combinations are NA entirely (it's okay if removed but can't be NA)
 
-    d <- d[ (! is.na(d[, wt.var ])) & (! is.na(d[, var ])) & (! is.na(d[, x.geo.var])), ] 
+    d <- d[ (! is.na(d[, wt.var ])) & (! is.na(d[, var ])) & (! is.na(d[, d.geo.var])), ] 
   
     #by variable formula
-    by.form <- paste("~", x.geo.var)
+    by.form <- paste("~", d.geo.var)
 
     
     if( ! is.null(by.var)) {
@@ -61,7 +61,7 @@ calcStats <-function(d, var, stat=c("mean", "total"),
 
        if (! is.null(by.var)) {
          byvar.range <- names(table(stat.mat[, by.var ]))
-         cast.form <- as.formula(paste(x.geo.var, by.var, sep="~")) 
+         cast.form <- as.formula(paste(d.geo.var, by.var, sep="~")) 
 	
          stat.mat <- reshape2::dcast(data=stat.mat, formula=cast.form, value.var="statistic")
          n <- ncol(stat.mat)
@@ -79,8 +79,8 @@ calcStats <-function(d, var, stat=c("mean", "total"),
        #now eliminate small cells:
        if (cell.min >0 )  {
             
-           if (is.null(by.var)) { t.c <- as.matrix(table(d[, x.geo.var ])) }
-           else { t.c <- as.matrix(table( d[, c(x.geo.var, by.var)]) ) }
+           if (is.null(by.var)) { t.c <- as.matrix(table(d[, d.geo.var ])) }
+           else { t.c <- as.matrix(table( d[, c(d.geo.var, by.var)]) ) }
 
            t.c <- t.c[ rowSums(t.c, na.rm=TRUE) >0, ]
            stat.mat[ , 2:ncol(stat.mat)][ t.c < cell.min ] <- NA
