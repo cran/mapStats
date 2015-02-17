@@ -5,7 +5,6 @@ exportPattern("^[[:alpha:]]+")
  importFrom(reshape2, dcast)
  importFrom(classInt, classIntervals, findColours, findCols)
  importFrom(sp, spplot)
- importFrom(quantreg, rq)
  importFrom(colorspace, sequential_hcl)
  import(survey, lattice, maptools)
- 
+ S3method(print, plotStats)

@@ -1,5 +1,5 @@
-calcQuantiles	        Compute survey variable quantiles
-calcStats	        Compute survey variable mean or total	
+calcStats	        Compute survey variable statistics
+calcQuantiles		Legacy function to calculate quantiles	
 jiggleClass	        Adjust class boundaries to protect from rounding errors
 mapStats	        Calculate and plot survey variable statistics
 plotStats	        Plot survey variable statistics
