@@ -48,7 +48,7 @@ head(surveydata)
 #print each statistic on a separate page, using separate color breaks for each.  Will print 2 pages.       
 
 
-mapStats(d=surveydata, var="income", stat=c("mean","quantile"), quantiles=.5, 
+mapStats(d=surveydata, var="income", stat=c("mean", "quantile"), quantiles=.5, wt.var="obs_weight",
                d.geo.var="state", by.var=c("year","educ"), map.file=usMap, map.label=FALSE,
                par.strip.text = list(cex = .7))
 
@@ -76,14 +76,15 @@ mapStats(d=surveydata, var="income", d.geo.var="state", by.var=c("year"),
          num.col=1, num.row=3, layout=c(2,1))
 
 #plot all four statistics over all four years, on one page with 2 rows and 2 columns,
-#using vertical order. Shrink labels so they fit better.  
+#using vertical order. Shrink labels so they fit better. 
+#shrink plot titles so all fit. 
 
 
 mapStats(d=surveydata, var="income", d.geo.var="state", by.var=c("year"),
          wt.var="obs_weight", map.file=usMap,
          map.geo.var="state", stat=c("mean","quantile"),
          quantiles=c(.25, .5, .75), paletteName="Reds", ngroups=6, 
-         var.pretty="household income", map.label=FALSE,
+         map.label=FALSE, var.pretty="household income",
          num.col=2, num.row=2, layout=c(2,1), cex.label=.5, horizontal.fill=FALSE)
 
 
@@ -94,7 +95,7 @@ mapStats(d=surveydata, var="income", d.geo.var="state", by.var=c("year"),
          wt.var="obs_weight", map.file=usMap,
          map.geo.var="state", stat=c("mean","quantile"),
          quantiles=c(.25, .5, .75), paletteName=c("Reds","Greens","Blues","Greys"), ngroups=6, 
-         var.pretty="household income", map.label=FALSE,
+         map.label=FALSE,  var.pretty="household income", 
          num.col=2, num.row=2, layout=c(2,1), cex.label=.5, horizontal.fill=FALSE)
 
 
@@ -106,7 +107,7 @@ mapStats(d=surveydata, var="income", d.geo.var="state", by.var=c("year"),
          wt.var="obs_weight", map.file=usMap,
          map.geo.var="state", stat=c("mean","quantile"),
          quantiles=c(.25, .5, .75), paletteName=c("Reds","Greens","Blues","Greys"), ngroups=6, 
-         var.pretty="household income", map.label=FALSE,
+         var.pretty="household income", map.label=FALSE, 
          num.col=2, num.row=2, layout=c(2,1), cex.label=.5, horizontal.fill=FALSE,
          separate=0)
 
@@ -117,7 +118,7 @@ mapStats(d=surveydata, var="income", d.geo.var="state", by.var=c("year"),
          wt.var="obs_weight", map.file=usMap,
          map.geo.var="state", stat=c("mean","quantile"),
          quantiles=c(.25, .5, .75), paletteName=c("Reds","Greens","Blues","Greys"), ngroups=6, 
-         var.pretty="household income", map.label=FALSE,
+         var.pretty="household income", map.label=FALSE, 
          num.col=2, num.row=2, layout=c(2,1), cex.label=.5, horizontal.fill=FALSE,
          separate=0, style="jenks")
 
@@ -133,7 +134,7 @@ mapStats(d=surveydata, var="income", d.geo.var="state", by.var=c("year"),
          wt.var="obs_weight", map.file=usMap,
          map.geo.var="state", stat=c("mean","quantile"),
          quantiles=c(.25, .75), colorVec=list(red_hcl, green_hcl, blue_hcl),
-         var.pretty="household income", map.label=FALSE,
+         var.pretty="household income", map.label=FALSE, 
          num.col=2, num.row=2, layout=c(2,1), cex.label=.5, horizontal.fill=FALSE,
          separate=1, style="jenks")
 
@@ -217,14 +218,16 @@ usMap$region[ usMap$state %in% south ] <- "South"
 
 
 #calculate mean and median by Census region, using a combined scale for 
-#both statistics (separate = FALSE), and stack vertically
+#all statistics (separate = 0), and stack vertically
+#multiple statistics and no by variable
 
-mapStats(d=surveydata, var="income", wt.var="obs_weight", map.file=usMap,
+mapStats(d=surveydata, var=c("income","age"), wt.var="obs_weight", map.file=usMap,
          d.geo.var="region", map.geo.var="region",
-         stat=c("mean", "quantile"), quantiles=c(.5),
-         paletteName="Reds", ngroups=4, var.pretty="household income",
-         map.label=TRUE, cex.label=.6, separate=0,
-         horizontal.fill=FALSE, num.row=2)
+         stat=c("mean", "quantile", "var"), quantiles=c(.5),
+         paletteName=c("Reds"), ngroups=3, var.pretty=c("household income","age"),
+         map.label=FALSE, cex.label=.6, separate=1,
+         horizontal.fill=FALSE, num.row=3)
+
 
 #use of separate with multiple statistics
 #separate=1 allows you to compare the medians, so plotvars=FALSE to group by statistic
@@ -250,3 +253,4 @@ mapStats(d=surveydata, var=c("income","age"), wt.var="obs_weight", map.file=usMa
          paletteName=c("Reds","Blues","Greens"), ngroups=c(3,4), var.pretty=c("household income","age"),
          map.label=FALSE, cex.label=.6, separate=1,
          horizontal.fill=FALSE, num.row=2, layout=c(2,1))
+

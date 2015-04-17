@@ -22,12 +22,32 @@ plotStats <- function(statmats,
                       num.col,
                       ...) {
  
-    #sort id column
-    map.file@data$sort.id <- 1:nrow(map.file@data)
 
-    #get rid of the last Freqs table
+    #correction just in case: if there is only one variable, no by.variable
+    if (ncol(statmats[[1]][[1]])==2) { by.pretty <- NULL }
+
+    map.file@data$sort.id <- 1:nrow(map.file@data)
+    for (s in names(statmats)) {
+
+	#get rid of the last Freqs table
     
-    for (s in names(statmats)) { statmats[[ s ]] <- statmats[[ s ]][ - length(statmats[[ s ]]) ] }
+        statmats[[s]] <- statmats[[s]][-length(statmats[[s]])]
+  
+        #if no by.var , need to change the variable name for merging
+        #loop over stat names for each variable so plotvars is same for all
+        if (is.null(by.pretty)) {
+          for (mn in names(statmats[[1]])) {
+             colnames(statmats[[s]][[mn]])[2] <- "theanalysisvariable"
+               }
+     
+
+        }
+      
+    }
+
+
+
+    
     num_plots <- length(unlist(statmats))
     num_vars <- length(names(statmats))
     num_stats <- length(statmats[[1]])
@@ -146,9 +166,15 @@ plotStats <- function(statmats,
       class_div <- classInt::classIntervals(var=var_noNA, n=ngroups[1],  ...)
       class_div <- jiggleClass(x=class_div)
       breaks <- rep_len(list(class_div$brks), length.out=num_plots)
-            
+
+      #in case number of groups changes
+      ngroups[1] <- length(breaks) -1
+      
+      #allow ngroups to change      
       if( usebrewer==TRUE ) {  plotclr <- RColorBrewer::brewer.pal(n=ngroups[1], name=paletteName[1])  }
-      else { plotclr <- colorVec[[1]] }
+      else { plotclr <- colorVec[[1]][ 1:ngroups[1] ] }
+ 
+          
       
       plotclr <- rep_len(list(plotclr), length.out=num_plots)
       
@@ -170,10 +196,11 @@ plotStats <- function(statmats,
         class_div <- classInt::classIntervals(var=var_noNA, n=ngroups[k],  ...)
         class_div <- jiggleClass(x=class_div)
         breaks[[ k ]] <- class_div$brks
+        #allow ngroups to change
+        ngroups[k] <- length(breaks[[k]]) -1
                 
-        
         if ( usebrewer==TRUE ) { plotclr[[k]] <- RColorBrewer::brewer.pal(n=ngroups[k], name=paletteName[k]) }
-        else {  plotclr[[k]] <- colorVec[[k]]  }
+        else {  plotclr[[k]] <- colorVec[[k]][ 1:ngroups[k] ]  }
       
       }
       
@@ -201,10 +228,11 @@ plotStats <- function(statmats,
          class_div <- classInt::classIntervals(var=var_noNA, n=ngroups[k*num_stats],  ...)
          class_div <- jiggleClass(x=class_div)
          breaks[[ k ]] <- class_div$brks
-        
+         ngroups[ k*num_stats ] <- length(breaks[[ k ]]) -1
+    
          
          if( usebrewer==TRUE ) {  plotclr[[k]] <- RColorBrewer::brewer.pal(n=ngroups[k*num_stats], name=paletteName[k*num_stats])  }
-         else { plotclr[[k]] <- colorVec[[k*num_stats]] }
+         else { plotclr[[k]] <- colorVec[[k*num_stats]][ 1:ngroups[ k*num_stats ] ] }
         
        }
        
@@ -228,11 +256,11 @@ plotStats <- function(statmats,
             class_div <- classInt::classIntervals(var=var_noNA, n=ngroups[k], ...)
             class_div <- jiggleClass(x=class_div)
             breaks[[ k]] <- class_div$brks
+            ngroups[ k ] <- length(breaks[[ k ]]) -1
             
             if ( usebrewer==TRUE ) { plotclr[[k]] <- RColorBrewer::brewer.pal(n=ngroups[k], name=paletteName[k]) }
-            else {  plotclr[[k]] <- colorVec[[k]]  }
-            
-            
+            else {  plotclr[[k]] <- colorVec[[k]][ 1:ngroups[ k ] ]  }
+                   
             
             }
         }#end of setting plot colors and breaks
@@ -321,7 +349,8 @@ plotStats <- function(statmats,
           else {
 	 
                  tmp_plot <- sp::spplot(obj=map_tmp, zcol=plotvars, names.attr=prettynames ,
-                                        col.regions=plotclr[[k]], at=breaks[[k]],  main=titles[k], ...)
+                                        col.regions=plotclr[[k]], at=breaks[[k]],  
+                                        main=list(label=titles[k], cex=cex.title), ...)
                       }
  
     	}

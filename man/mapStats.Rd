@@ -55,7 +55,9 @@ and additional ones can be specified in \code{by.var}.
 }
   \item{by.var}{
 a vector of character strings specifying variable names in the dataset \code{d} to use as class variables.  The order in which variables are specified will affect the order in which they are combined for calculations.
-The default is NULL, in which case statistics are calculated by each geographic unit (\code{d.geo.var}) only. 
+The default is NULL, in which case statistics are calculated by each geographic unit (\code{d.geo.var}) only.
+The function will omit from analysis any class variables that have only one level over the entire dataset.  However it is still possible that a given class variable will have only one value 
+for one of the analysis variables if, say, multiple analysis variables are used. 
 }
   \item{map.file}{
 an object of class \code{\link[sp]{SpatialPolygonsDataFrame}} on which the statistics will be plotted.

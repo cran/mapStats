@@ -5,7 +5,7 @@
 Geographic display of survey data statistics
 }
 \description{
-\code{mapStats} will calculate statistics (mean, total, and quantiles) for survey
+\code{mapStats} will calculate statistics (mean, total, quantiles, variance, and standard deviation) for survey
 variables, by geography level (e.g. state, county), and optional class variables
 (such as year, if multiple years are included).  The statistics for each variable
 are then plotted on a shapefile with color codes.  Statistics may be calculated either weighted or unweighted.  The function \code{\link{calcStats}}, which is called by \code{\link{mapStats}}, can also be used on its own to calculate variable statistics.

@@ -2,12 +2,14 @@
 \alias{plotStats}
 \alias{print.plotStats}
 \alias{calcQuantiles}
+\alias{nobsEach}
 \title{
 Internal functions for mapStats package
 }
 \description{
 \code{plotStats} creates trellis plot objects that are then printed by \code{print.plotStats}.  They are called
-internally from within \code{\link[mapStats]{mapStats}}.
+internally from within \code{\link[mapStats]{mapStats}}.  \code{nobsEach} is used by \code{jiggleClass} to 
+calculate the number of observations in each division.
 }
 \usage{
 plotStats(statmats, map.file, d.geo.var, map.geo.var, ngroups, separate, paletteName,
@@ -16,6 +18,8 @@ plotStats(statmats, map.file, d.geo.var, map.geo.var, ngroups, separate, palette
           sp_layout.pars, plotbyvar, num.col, ...)
 
 calcQuantiles(...)
+
+nobsEach(divs)
 
 \method{print}{plotStats}(x, horizontal.fill = TRUE, num.row = 1, num.col = 1, ...)
 }
@@ -114,6 +118,9 @@ single plot to make sure the plots print with enough space.  Examples are shown 
   \item{num.row}{
 numeric. To print multiple statistics on one page, indicate the number of rows for panel arrangement.  Under the default, one statistic is
 printed per page.
+}
+\item{divs}{
+An object of class \code{classIntervals}.
 }
   \item{...}{
 Further arguments, usually lattice plot arguments.

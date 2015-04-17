@@ -20,8 +20,38 @@ calcStats <- function (d, var, d.geo.var, stat=c("mean","quantile"), quantiles=c
 
     #make the by variables factors just in case
     for (k in c(d.geo.var, by.var)) {
-           d[, k] <- as.factor(d[, k])
+
+           d[, k] <- as.factor(d[, k])      
+ 
     }
+
+    #check if there is only one level of the by-variable:
+    
+    if (! is.null(by.var)) {
+	#number of factor levels for each by variable
+        len <- unlist(with(d, lapply(by.var, function(x) { length(levels(d[,x])) }))) 
+         
+        if (all(len==1)) { 
+            by.var <- NULL 
+            warning("None of the by-variables have more than one level.\nAnalysis will continue without by-variables.\n")
+            }
+                   
+        else if (any( len ==1)) {
+
+            #if some (but not all) of the by-variables have length one
+
+            by.var <- by.var[ len > 1 ]
+            warning(paste("The following by-variables are omitted from analyis\nbecause they have only one level:",
+                      paste(by.var[ len == 1 ], collapse=", "), sep="\n"))
+              
+            }
+
+     }#finish checking by-var
+
+
+                
+
+
    
     
     by.form <- as.formula( paste("~", paste( c(d.geo.var, by.var), collapse=" + ")))
