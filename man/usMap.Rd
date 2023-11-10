@@ -7,23 +7,21 @@ Shapefile of US state boundaries
 \description{
 Examples are provided using the \code{\link{usMap}} shapefile with a synthetic dataset.
 }
-%%\details{
-%%  ~~ If necessary, more details than the __description__ above ~~
-%%}
+
 \source{
-\url{http://www.cdc.gov/brfss/maps/gis_data.htm}
+\url{https://www.cdc.gov/brfss/gis/gis_maps.htm}
 }
-%%\references{
-%%  ~~ possibly secondary sources and usages ~~
-%%}
+
 \examples{
 #read the shapefile
 #display first five rows of shapefile dataset
 #plot the shapefile boundaries
 
-\dontrun{
-usMap <- readShapePoly(system.file("shapes/usMap.shp", package="mapStats")[1])
+usMap <- sf::as_Spatial(sf::st_read(system.file("shapes/usMap.shp", package="mapStats")[1]))
 head(usMap@data)
-plot(usMap)
-}
+# plot the outlines of the shapefile only
+sp::plot(usMap)
+# plot map colored according to one of the variables in @data
+sp::spplot(usMap, zcol="A187_1")
+
 }

@@ -1,4 +1,4 @@
-calcStats <- function (d, var, d.geo.var, stat=c("mean","quantile"), quantiles=c(.5,.75),  
+calcStats <- function (d, main.var, d.geo.var, stat=c("mean","quantile"), quantiles=c(0.5,0.75),  
                        by.var=NULL, wt.var = NULL, cell.min = 0) 
     {
 
@@ -7,7 +7,7 @@ calcStats <- function (d, var, d.geo.var, stat=c("mean","quantile"), quantiles=c
 
    #check if all variables defined
    
-   for (g in c(var, d.geo.var, by.var, wt.var)) { if (! g %in% colnames(d)) { stop (paste("Variable",g,"not defined.")) } }
+   for (g in c(main.var, d.geo.var, by.var, wt.var)) { if (! g %in% colnames(d)) { stop (paste("Variable",g,"not defined.")) } }
    
    #list to contain all variable statistics lists
    all_stats <- list()
@@ -54,16 +54,16 @@ calcStats <- function (d, var, d.geo.var, stat=c("mean","quantile"), quantiles=c
 
    
     
-    by.form <- as.formula( paste("~", paste( c(d.geo.var, by.var), collapse=" + ")))
+    by.form <- stats::as.formula( paste("~", paste( c(d.geo.var, by.var), collapse=" + ")))
 
     #create formulas for weights and analysis variable
-    wt.form <- as.formula(paste("~", wt.var))
+    wt.form <- stats::as.formula(paste("~", wt.var))
 
 
 
     #option for multiple variables:
 
-    for (x in var) {
+    for (x in main.var) {
 
       
 
@@ -75,17 +75,17 @@ calcStats <- function (d, var, d.geo.var, stat=c("mean","quantile"), quantiles=c
        #the fact that the by-variables were made factors before keeps 
        #the levels even though we may have missing combinations
 
-       d_tmp <- na.omit(d[, c(wt.var, x, d.geo.var, by.var)])
+       d_tmp <- stats::na.omit(d[, c(wt.var, x, d.geo.var, by.var)])
 
-       var.form <- as.formula(paste("~", x))
+       var.form <- stats::as.formula(paste("~", x))
 
        #now recast the resulting matrix  so
        #have one row per d.geo.var level for merging  
                   
-       if (! is.null(by.var)) { cast.form <- as.formula(paste(d.geo.var, paste(by.var, collapse=" + "), sep = "~")) }  
+       if (! is.null(by.var)) { cast.form <- stats::as.formula(paste(d.geo.var, paste(by.var, collapse=" + "), sep = "~")) }  
 
        #now define structure for the data design
-       data.des <- svydesign(ids = ~1, data = d_tmp, weights = wt.form)
+       data.des <- survey::svydesign(ids = ~1, data = d_tmp, weights = wt.form)
 
        #here we create names for the columns
        #this is necessary to avoid common characters like . or _
@@ -103,51 +103,59 @@ calcStats <- function (d, var, d.geo.var, stat=c("mean","quantile"), quantiles=c
 
 
       #now loop through each statistic and calculate
-
        for (k in stat) {
-           svyfunc <- match.fun(paste("svy", ifelse(k %in% c("sd","var"), "var", k), sep = ""))
         
            #create matrix of statistics
 
-       
-           if (k == "quantile") {
+            if (k == "quantile") {
+			
+		   		   
+				# extra processing for quantiles
+				# want to use the old function version of svyquantile if uses newer survey package >= 4.1
+				# otherwise use original svyquantile
+				# computes all quantiles
+				newsvy_package <- utils::compareVersion(as.character(utils::packageVersion("survey")), "4.1") >= 0
+				stat.mat <- survey::svyby(formula = var.form, by = by.form, design = data.des, 
+										  FUN = ifelse(newsvy_package, survey::oldsvyquantile, survey::svyquantile) , keep.var = FALSE, na.rm = TRUE, drop.empty.groups = FALSE,
+										  quantiles=quantiles, method="constant")
+			
             
-           #extra processing for quantiles
-            stat.mat <- svyby(formula = var.form, by = by.form, design = data.des, 
-                              FUN = svyfunc, keep.var = FALSE, na.rm = TRUE, drop.empty.groups = FALSE,
-                              quantiles=quantiles, method="constant")
-            
-            #create statistic names
-            
-            qnames <- paste("Q",100*quantiles, sep="")
-            qnames[ qnames=="Q0" ] <- "Minimum"
-            qnames[ qnames=="Q50" ] <- "Median"
-            qnames[ qnames=="Q100" ] <- "Maximum"
-            
-            #break out each quantile from matrix
-              for (q in 1:length(quantiles)) {
-                  qn <- ifelse(length(quantiles)>1, paste("statistic", q, sep=""), "statistic")
-              
-                 mat <- stat.mat[, c(d.geo.var, by.var, qn)]
-                 if ( ! is.null(by.var)) { mat <-  reshape2::dcast(data=mat, formula=cast.form, value.var=qn) }                     
-                
-                  colnames(mat) <- cnames
-                  v.stats[[ qnames[q] ]] <- mat
+				#create statistic names
+				
+				qnames <- paste("Q",100*quantiles, sep="")
+				qnames[ qnames=="Q0" ] <- "Minimum"
+				qnames[ qnames=="Q50" ] <- "Median"
+				qnames[ qnames=="Q100" ] <- "Maximum"
+				
+				#break out each quantile from matrix
+				for (qidx in 1:length(quantiles)) {
+					  qn <- ifelse(length(quantiles)>1, paste("statistic", qidx, sep=""), "statistic")
+					 
+					 mat <- stat.mat[, c(d.geo.var, by.var, qn)]
+					 if ( ! is.null(by.var)) { mat <-  reshape2::dcast(data=mat, formula=cast.form, value.var=qn) }                     
+					
+					  colnames(mat) <- cnames
+					  v.stats[[ qnames[qidx] ]] <- mat
 
-               }
+				   }
 
             }
           
            #mean/total/var/sd
 
            else {
+		   
+		     # if want sd, calulate var and then take sqrt
+			 svyfunc <- match.fun(paste("svy", ifelse(k %in% c("sd","var"), "var", k), sep = ""))
 
-              mat <- svyby(formula = var.form, by = by.form, design = data.des, 
-                                FUN = svyfunc, keep.var = FALSE, na.rm = TRUE, drop.empty.groups = FALSE)
+
+              mat <- survey::svyby(formula = var.form, by = by.form, design = data.des, 
+									FUN = svyfunc, keep.var = FALSE, na.rm = TRUE, drop.empty.groups = FALSE)
             
-                 
-             if (! is.null(by.var)) { mat <- reshape2::dcast(data=mat, formula=cast.form, value.var="statistic") }
-             colnames(mat) <- cnames
+
+             if (! is.null(by.var)) { mat <- reshape2::dcast(data=mat, formula=cast.form, value.var="statistic") }    
+			 
+			 colnames(mat) <- cnames
 
               #standard deviation
 
@@ -161,22 +169,20 @@ calcStats <- function (d, var, d.geo.var, stat=c("mean","quantile"), quantiles=c
 
 
            #table of frequency counts
-
            t.c <- as.data.frame(table(d_tmp[, c(d.geo.var, rev(by.var)) ])) 
            if (! is.null(by.var)) {
                       
               t.c <- reshape2::dcast(data=t.c, formula=cast.form, value.var="Freq")
             }
-         
-
            #now loop over all statistics and make NA all the ones with NAs
-	     if (cell.min >0 ) {
+	     if (cell.min > 0) {
               colrange <- 2:ncol(t.c)
               NAfreqs <- (t.c[, colrange ] < cell.min)
-           
+
               for (k in names(v.stats)) {
-                  
                   mat <- v.stats[[ k ]]
+
+				  
                   mat[ , colrange ][ NAfreqs ] <- NA
                   v.stats[[ k ]][ , colrange ] <- mat[ , colrange ]
                 }
@@ -191,9 +197,4 @@ calcStats <- function (d, var, d.geo.var, stat=c("mean","quantile"), quantiles=c
 
 
     all_stats  
-    }
-
-
-
-
-     
+}

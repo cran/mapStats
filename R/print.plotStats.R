@@ -36,8 +36,8 @@ print.plotStats <- function(x,
 
    #print the objects
 
-   
-   for (k in 1:length(x)) { print(x[[ k ]], split=as.numeric(as.vector( indices[k, 1:4])), more = indices$notlast[k])  }
+   #want to include the additional parameters to control spacing from http://127.0.0.1:16709/library/lattice/html/print.trellis.html
+   for (k in 1:length(x)) { print(x[[ k ]], split=as.numeric(as.vector( indices[k, 1:4])), more = indices$notlast[k], ...)  }
 
    x
 

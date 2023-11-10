@@ -3,13 +3,15 @@
 \alias{print.plotStats}
 \alias{calcQuantiles}
 \alias{nobsEach}
+\alias{synthetic_US_dataset}
 \title{
 Internal functions for mapStats package
 }
 \description{
 \code{plotStats} creates trellis plot objects that are then printed by \code{print.plotStats}.  They are called
 internally from within \code{\link[mapStats]{mapStats}}.  \code{nobsEach} is used by \code{jiggleClass} to 
-calculate the number of observations in each division.
+calculate the number of observations in each division.  \code{synthetic_US_dataset} generates a synthetic dataset
+to be used in examples with the supplied \code{usMap}.
 }
 \usage{
 plotStats(statmats, map.file, d.geo.var, map.geo.var, ngroups, separate, paletteName,
@@ -22,6 +24,9 @@ calcQuantiles(...)
 nobsEach(divs)
 
 \method{print}{plotStats}(x, horizontal.fill = TRUE, num.row = 1, num.col = 1, ...)
+
+synthetic_US_dataset()
+
 }
 \arguments{
   \item{statmats}{
@@ -125,6 +130,21 @@ An object of class \code{classIntervals}.
   \item{...}{
 Further arguments, usually lattice plot arguments.
 }
+}
+\value{
+	\item{plotStats}{
+		Returns a list of plot images.  Used only internally within function \code{mapStats}.
+	}
+	\item{calcQuantiles}{
+		Returns a list of \code{data.frame} objects representing statistic values.
+	}
+	\item{nobsEach}{
+		Returns a vector of frequency counts of observations in an object of class \code{classIntervals}.
+	}
+	\item{synthetic_US_dataset}{
+		Returns an item of class \code{data.frame}.	
+	}
+
 }
 \author{
 Samuel Ackerman

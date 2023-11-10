@@ -287,10 +287,11 @@ plotStats <- function(statmats,
 
   #  #add labels for geography
    if (map.label == TRUE) {
+	  crds <- sp::coordinates(map.file)
   
-  sl1 <- list('panel.text', sp::coordinates(map.file)[,1], sp::coordinates(map.file)[,2], 
-              labels=map.file@data[, map.label.names ], cex=cex.label, col=col.label, ...) 
-  
+	  sl1 <- list('panel.text', crds[,1], crds[,2], 
+				  labels=map.file@data[, map.label.names ], cex=cex.label, col=col.label, ...) 
+	  
   #this allows you to add extra polygons, etc. on top of   
   if( length(sp_layout.pars) >0 )  {
     
