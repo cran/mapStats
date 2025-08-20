@@ -192,7 +192,7 @@ coloring, and other customizable options, as well as more examples
 
 
 \seealso{
-The \code{survey} package function \code{\link[survey]{svyby}} is used to calculate variable statistics, and \code{\link{spplot}} plots the map. 
+The \code{survey} package function \code{\link[survey]{svyby}} is used to calculate variable statistics, and \code{\link[sp]{spplot}} plots the map. 
 See the supplied demo \code{map_examples} for a fuller set of examples illustrating the range of parameter options.
 }
 \examples{

@@ -1,4 +1,4 @@
-05919fd31f70733373d5c900b778ea5d *DESCRIPTION
+a1c1711e8e756037519f1687432a62ff *DESCRIPTION
 b353d0652f0fe189acb885d26d9da068 *INDEX
 e630286dabbc18440ba51ee3103c32fe *NAMESPACE
 d4e9e63516eff1eab80f3d6c84289fe3 *R/calcStats.R
@@ -18,5 +18,5 @@ c8c068197df4ec037026560b29c795ea *inst/shapes/usMap.sbn
 ad8e953f49e7e6c439ac170e3bbf14bb *man/jiggleClass.Rd
 d68f3f6fd53d3f550c3f281d2647b514 *man/mapStats-internal.Rd
 5a50a12a077a437d99471a9d595303e9 *man/mapStats-package.Rd
-a6ee83c920374181122e87c0a334b13f *man/mapStats.Rd
+f3f9f26e33b1f7eeada41bff0fd91524 *man/mapStats.Rd
 efce7754e741edc617caeb8da3a1b836 *man/usMap.Rd
